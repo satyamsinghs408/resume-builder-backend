@@ -1,12 +1,27 @@
 const mongoose = require('mongoose');
 
 const resumeSchema = mongoose.Schema({
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
-    email: { type: String, required: true },
-    address: { type: String },
+    firstName: { type: String },
+    lastName: { type: String },
+    email: { type: String },
     phone: { type: String },
-    // We can add complex fields like Education/Experience later
+    address: { type: String },
+    
+    // Existing Experience Array
+    experience: [{
+        title: String,
+        company: String,
+        description: String
+    }],
+
+    // --- NEW: Education Array ---
+    education: [{
+        school: String,
+        degree: String,
+        year: String
+    }]
+    // ----------------------------
+
 }, {
     timestamps: true 
 });
