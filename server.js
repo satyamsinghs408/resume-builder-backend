@@ -5,6 +5,8 @@ const connectDB = require('./config/db');
 
 // Import Routes
 const resumeRoutes = require('./routes/resumeRoutes'); // <--- ADD THIS
+const userRoutes = require('./routes/userRoutes');
+
 
 dotenv.config();
 connectDB();
@@ -16,6 +18,9 @@ app.use(express.json());
 
 // Mount the Routes
 app.use('/api/resumes', resumeRoutes); // <--- ADD THIS
+app.use('/api/users', userRoutes); // <--- ADD THIS
+app.use('/api/resumes', resumeRoutes);
+
 
 // Default Route
 app.get('/', (req, res) => {

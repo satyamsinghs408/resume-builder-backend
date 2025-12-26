@@ -4,22 +4,25 @@ const Resume = require('../models/Resume');
 // @route   POST /api/resumes
 const createResume = async (req, res) => {
     try {
-        // 1. Get data from the frontend (request body)
-        const { firstName, lastName, email, address, phone } = req.body;
+        const { firstName, lastName, email, address, phone, experience, education } = req.body;
 
-        // 2. Create a new Resume object
+        // CRITICAL CHECK: Did the middleware work?
+        if (!req.user) {
+             return res.status(401).json({ message: "User not found in request" });
+        }
+
         const newResume = new Resume({
+            user: req.user._id, // <--- THIS IS NEW (Links resume to the logged-in user)
             firstName,
             lastName,
             email,
             address,
-            phone
+            phone,
+            experience,
+            education
         });
 
-        // 3. Save it to MongoDB
         const savedResume = await newResume.save();
-
-        // 4. Send the saved data back as a response
         res.status(201).json(savedResume);
     } catch (error) {
         res.status(400).json({ message: error.message });
@@ -30,11 +33,36 @@ const createResume = async (req, res) => {
 // @route   GET /api/resumes
 const getResumes = async (req, res) => {
     try {
-        const resumes = await Resume.find(); // Fetch all documents
+        // Find resumes where the 'user' field matches the logged-in user's ID
+        const resumes = await Resume.find({ user: req.user._id });
+        
         res.status(200).json(resumes);
     } catch (error) {
         res.status(500).json({ message: error.message });
     }
 };
 
-module.exports = { createResume, getResumes };
+// @desc    Delete a resume
+// @route   DELETE /api/resumes/:id
+const deleteResume = async (req, res) => {
+    try {
+        const resume = await Resume.findById(req.params.id);
+
+        if (!resume) {
+            return res.status(404).json({ message: 'Resume not found' });
+        }
+
+        // Security Check: Ensure the user owns this resume
+        if (resume.user.toString() !== req.user.id) {
+            return res.status(401).json({ message: 'Not authorized' });
+        }
+
+        await resume.deleteOne();
+        res.status(200).json({ message: 'Resume removed' });
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// Don't forget to export it!
+module.exports = { createResume, getResumes, deleteResume };
