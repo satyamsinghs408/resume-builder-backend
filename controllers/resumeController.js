@@ -64,5 +64,40 @@ const deleteResume = async (req, res) => {
     }
 };
 
+// @desc    Update an existing resume
+// @route   PUT /api/resumes/:id
+const updateResume = async (req, res) => {
+    try {
+        const { firstName, lastName, email, address, phone, experience, education } = req.body;
+
+        // 1. Find the resume
+        const resume = await Resume.findById(req.params.id);
+
+        if (!resume) {
+            return res.status(404).json({ message: 'Resume not found' });
+        }
+
+        // 2. Check ownership (Security)
+        if (resume.user.toString() !== req.user.id) {
+            return res.status(401).json({ message: 'Not authorized' });
+        }
+
+        // 3. Update fields
+        resume.firstName = firstName || resume.firstName;
+        resume.lastName = lastName || resume.lastName;
+        resume.email = email || resume.email;
+        resume.phone = phone || resume.phone;
+        resume.address = address || resume.address;
+        resume.experience = experience || resume.experience;
+        resume.education = education || resume.education;
+
+        const updatedResume = await resume.save();
+        res.json(updatedResume);
+
+    } catch (error) {
+        res.status(400).json({ message: error.message });
+    }
+};
+
 // Don't forget to export it!
-module.exports = { createResume, getResumes, deleteResume };
+module.exports = { createResume, getResumes, deleteResume, updateResume };
