@@ -1,6 +1,73 @@
-import { Response } from 'express';
+import { Request, Response } from 'express';
 import Resume from '../models/Resume';
 import { AuthRequest } from '../types';
+import * as fs from 'fs';
+
+// @desc    Parse Resume PDF
+// @route   POST /api/resumes/parse
+// @access  Public
+export const parseResume = async (req: Request & { file?: Express.Multer.File }, res: Response) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'No file uploaded' });
+    }
+
+    const dataBuffer = fs.readFileSync(req.file.path);
+    // Standard pdf-parse v1 usage
+    const pdfParse = require('pdf-parse');
+    const data = await pdfParse(dataBuffer);
+    const text = data.text;
+
+    // --- HEURISTIC PARSING LOGIC ---
+    // 1. Email
+    const emailRegex = /([a-zA-Z0-9._-]+@[a-zA-Z0-9._-]+\.[a-zA-Z0-9_-]+)/;
+    const emailMatch = text.match(emailRegex);
+    const email = emailMatch ? emailMatch[0] : '';
+    
+    // 2. Phone
+    const phoneRegex = /(\+?\d{1,3}[-.\s]?)?\(?\d{3}\)?[-.\s]?\d{3}[-.\s]?\d{4}/;
+    const phoneMatch = text.match(phoneRegex);
+    const phone = phoneMatch ? phoneMatch[0] : '';
+
+    // 3. Name (Heuristic)
+    const lines = text.split('\n').map((l: string) => l.trim()).filter((l: string) => l.length > 0);
+    const potentialName = lines[0] || '';
+    const nameParts = potentialName.split(' ');
+    const firstName = nameParts[0] || '';
+    const lastName = nameParts.length > 1 ? nameParts.slice(1).join(' ') : '';
+
+    // 4. Experience (Heuristic - Dummy)
+    let experience = [];
+    const expIndex = text.toLowerCase().indexOf('experience');
+    if (expIndex !== -1) {
+        const expText = text.substring(expIndex, expIndex + 500); 
+        experience.push({
+            title: "Imported Role",
+            company: "See Description",
+            description: expText.substring(0, 200) + "..." 
+        });
+    } else {
+        experience.push({ title: '', company: '', description: '' });
+    }
+
+    // Clean up
+    fs.unlinkSync(req.file.path);
+
+    res.json({
+      firstName,
+      lastName,
+      email,
+      phone,
+      address: '', 
+      experience,
+      education: [{ school: '', degree: '', year: '' }]
+    });
+
+  } catch (error) {
+    console.error('Error parsing PDF:', error);
+    res.status(500).json({ message: 'Failed to parse resume', error: error instanceof Error ? error.message : 'Unknown error' });
+  }
+};
 
 // @desc    Create a new resume
 // @route   POST /api/resumes
