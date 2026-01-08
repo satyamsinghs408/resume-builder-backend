@@ -1,0 +1,113 @@
+
+
+SATYAM SINGH
++91 9598727250
+|satyamsinghs408@gmail.com|LinkedIn|GitHub|Portfolio
+Professional Summary
+Full Stack Developer proficient in designing, developing, and deploying scalable web applications using React.js, Node.js,
+Express.js, and MongoDB. Skilled in architecting RESTful APIs, implementing JWT-based authentication, and crafting
+interactive, accessible, and responsive UIs with Tailwind CSS. Equally adept at both frontend and backend development,
+with a strong understanding of component-driven design, performance optimization, and database efficiency.  Experienced
+in working with Agile methodologies, Git-based CI/CD workflows, and modern software development practices to deliver
+secure, high-performing, and maintainable applications.
+Technical Skills
+Languages:JavaScript (ES6+), TypeScript
+Frontend:HTML5, CSS3, Tailwind CSS, React.js, Redux Toolkit, Responsive Design
+Backend:Node.js, Express.js, RESTful APIs, JWT Authentication, Error Handling
+Database:MongoDB
+Tools & Platforms:Git, GitHub, Postman, Salesforce, VS Code, Vercel, Render, GitHub Actions
+Concepts:API Design, Debugging, Authentication
+Education
+Babu Banarasi Das UniversityLucknow, Uttar Pradesh
+Bachelor of Technology in Computer Science and Engineering (CGPA: 7.13)2021 – 2024
+Board of Technical Education Uttar PradeshSitapur, Uttar Pradesh
+Diploma in Computer Science and Engineering (CGPA: 8.12)2018 – 2021
+Experience
+SmartITBoxNoida, Uttar Pradesh
+Software DeveloperAug. 2025 – Present
+•
+Use the complete lifecycle of full-stack modules using React.js, Node.js, and MongoDB — from initial design and
+API architecture to deployment and maintenance.
+•
+Developed RESTful APIs and optimized server-side logic for scalability, reducing average API response time and
+enhancing throughput.
+•
+Collaborated with UI/UX teams to refine application interfaces, ensuring accessibility, responsiveness, and design
+consistency across all devices.
+•
+Implemented secure third-party API integrations, robust error handling, and asynchronous job processing for better
+data reliability.
+Software Developer InternMay. 2025 – Aug. 2025
+•
+Assisted in the development of modular and reusable frontend components using React.js, enhancing performance
+and reducing code redundancy.
+•
+Integrated multiple third-party APIs with secure token-based authentication and built automated testing workflows
+using Postman.
+•
+Worked closely with backend developers to debug production issues and implement hotfixes using Git-based version
+control in Agile sprints.
+•
+Enhanced user experience through responsive layouts and state management using Redux Toolkit and Tailwind
+CSS.
+Sphinx ComputersNew Delhi, Delhi
+Software Developer InternJun. 2022 – Aug. 2024
+•
+Designed and developed a dynamic news portal using HTML, CSS, JavaScript, and jQuery, ensuring smooth
+AJAX-based content updates and responsiveness.
+•
+Created an e-commerce prototype featuring persistent cart functionality, user interaction tracking, and lightweight
+UI animations.
+•
+Implemented custom form validation, responsive layouts, and dynamic DOM manipulations to simulate end-to-end
+user interactions.
+•
+Collaborated with mentors to understand real-world deployment workflows and front-end performance
+considerations.
+
+Projects
+IgniteVerse|React.js, Node.js, MongoDB, SQL, Tailwind CSSMar.  2025
+•
+Developed a full-stack test and evaluation platform supporting authentication, test creation, and real-time result
+computation using React.js and Node.js.
+•
+Built RESTful APIs for managing tests, users, and scoring logic; optimized database queries to improve evaluation
+performance by 25%.
+•
+Implemented secure JWT-based authentication and session handling, ensuring user data privacy and system
+integrity.
+•
+Integrated Nodemailer to automate notification workflows for test results and user communications.
+•
+Designed an intuitive admin dashboard for managing users and result analytics with modular components in
+React.js.
+MeetUp Web App
+|React.js, Express.js, Redux Toolkit, SQL, Tailwind CSSMay.  2024
+•
+Built an event management platform enabling users to create, manage, and join events with secure JWT
+authentication and role-based access.
+•
+Developed Express.js backend APIs to handle event lifecycle, registration, and validation, ensuring consistency
+between server and client.
+•
+Implemented Redux Toolkit for optimized state management, improving data synchronization and component
+rendering speed.
+•
+Designed responsive user interfaces and applied Tailwind CSS for clean, consistent design across desktop and
+mobile.
+•
+Integrated database transactions in SQL to maintain data integrity and prevent duplicate event creation.
+Image to PDF Converter
+|React.js, Express.js, PDF-Lib, Tailwind CSSFeb.  2024
+•
+Developed a lightweight tool to convert images to PDF using client-side rendering with React.js and server-side
+PDF generation via Express.js.
+•
+Implemented preview thumbnails, conversion progress indicators, and responsive design for enhanced UX.
+•
+Added SEO-friendly routing and meta tags for better visibility in search engines.
+Certifications
+* Full Stack Web Development Training — American India Foundation, Noida (2024).
+React – The Complete Guide — Academind by Maximilian Schwarzmuller (2023).
+Python and Machine Learning Workshop — Techkriti IIT Kanpur (Techno Cruise).
+Participant — TCS CodeVita Global Coding Contest.
