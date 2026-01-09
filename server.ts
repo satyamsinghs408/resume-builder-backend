@@ -11,7 +11,10 @@ connectDB();
 
 const app = express();
 
-// CORS Configuration - restrict to frontend URL in production
+// CORS Configuration - Uses FRONTEND_URL from .env
+// To switch environments, edit .env file:
+//   Local dev: FRONTEND_URL=http://localhost:5173
+//   Production: FRONTEND_URL=https://resume-builder-frontend-opal.vercel.app
 const corsOptions = {
   origin: process.env.FRONTEND_URL || 'http://localhost:5173',
   credentials: true,
