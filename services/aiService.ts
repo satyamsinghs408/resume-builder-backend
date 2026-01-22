@@ -49,14 +49,18 @@ export const parseResumeWithAI = async (text: string) => {
     const response = await result.response;
     const textResponse = response.text();
     
-    // Clean potential markdown if the model ignores instructions
     const cleanJson = textResponse.replace(/```json/g, '').replace(/```/g, '').trim();
-    
     return JSON.parse(cleanJson);
+
   } catch (error: any) {
-    console.error("Gemini AI Parsing Error:", error);
-    // Include the actual error message for debugging
     const errorMessage = error.message || JSON.stringify(error);
+    
+    // Check for Overload / Rate Limit
+    if (errorMessage.includes('503') || errorMessage.includes('429')) {
+         throw new Error("AI Server is busy right now. Please try again after 2 minutes.");
+    }
+    
+    console.error("Gemini AI Parsing Error:", error);
     throw new Error(`Failed to parse resume with AI: ${errorMessage}`);
   }
 };
