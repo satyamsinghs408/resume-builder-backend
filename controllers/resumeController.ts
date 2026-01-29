@@ -20,7 +20,7 @@ export const parseResume = async (req: Request & { file?: Express.Multer.File },
     const text = data.text;
 
     // Use AI Service to parse the text
-    console.log("Sending text to Gemini for parsing...");
+    // Use AI Service to parse the text
     const parsedData = await parseResumeWithAI(text);
 
     // Clean up uploaded file
@@ -45,7 +45,10 @@ export const parseResume = async (req: Request & { file?: Express.Multer.File },
 // @route   POST /api/resumes
 const createResume = async (req: AuthRequest, res: Response) => {
     try {
-        const { firstName, lastName, email, address, phone, experience, education } = req.body;
+        const { 
+            firstName, lastName, email, address, phone, summary,
+            socialLinks, experience, education, skills, projects, certifications, languages 
+        } = req.body;
 
         // CRITICAL CHECK: Did the middleware work?
         if (!req.user) {
@@ -59,8 +62,14 @@ const createResume = async (req: AuthRequest, res: Response) => {
             email,
             address,
             phone,
+            summary,
+            socialLinks,
             experience,
-            education
+            education,
+            skills,
+            projects,
+            certifications,
+            languages
         });
 
         const savedResume = await newResume.save();
@@ -116,7 +125,10 @@ const updateResume = async (req: AuthRequest, res: Response) => {
     try {
         if (!req.user) return res.status(401).json({ message: 'Not authorized' });
 
-        const { firstName, lastName, email, address, phone, experience, education } = req.body;
+        const { 
+            firstName, lastName, email, address, phone, summary,
+            socialLinks, experience, education, skills, projects, certifications, languages 
+        } = req.body;
 
         // 1. Find the resume
         const resume = await Resume.findById(req.params.id);
@@ -137,8 +149,14 @@ const updateResume = async (req: AuthRequest, res: Response) => {
         resume.email = email || resume.email;
         resume.phone = phone || resume.phone;
         resume.address = address || resume.address;
+        resume.summary = summary || resume.summary;
+        resume.socialLinks = socialLinks || resume.socialLinks;
         resume.experience = experience || resume.experience;
         resume.education = education || resume.education;
+        resume.skills = skills || resume.skills;
+        resume.projects = projects || resume.projects;
+        resume.certifications = certifications || resume.certifications;
+        resume.languages = languages || resume.languages;
 
         const updatedResume = await resume.save();
         res.json(updatedResume);

@@ -19,7 +19,12 @@ export const parseResumeWithAI = async (text: string) => {
       "email": "string (or empty)",
       "phone": "string (or empty)",
       "address": "string (or empty, city/state only)",
-      "summary": "string (short professional summary if available, else empty)",
+      "summary": "string (Extract the professional summary. CRITICAL: If no explicit summary/profile section exists, you MUST GENERATE a 2-3 sentence professional summary based on the candidate's experience and skills. Do not return an empty string.)",
+      "socialLinks": {
+          "linkedin": "string (url or empty)",
+          "github": "string (url or empty)",
+          "portfolio": "string (url or empty)"
+      },
       "skills": ["string", "string"], (max 10 key skills)
       "experience": [
         {
@@ -35,8 +40,32 @@ export const parseResumeWithAI = async (text: string) => {
         {
           "school": "string",
           "degree": "string",
-          "year": "string (graduation year usually)"
+          "startDate": "string (YYYY-MM-DD or MM/YYYY format) - optional",
+          "endDate": "string (YYYY-MM-DD or MM/YYYY format) - optional",
+          "current": boolean
         }
+      ],
+      "projects": [
+         {
+             "title": "string",
+             "description": "string (brief description)",
+             "technologies": ["string", "string"] (tech stack),
+             "link": "string (url or empty)"
+         }
+      ],
+      "certifications": [
+          {
+              "name": "string",
+              "issuer": "string",
+              "date": "string (YYYY-MM-DD or MM/YYYY, optional)",
+              "link": "string (optional)"
+          }
+      ],
+      "languages": [
+          {
+              "language": "string",
+              "proficiency": "string (Basic, Intermediate, Fluid, Native)"
+          }
       ]
     }
 

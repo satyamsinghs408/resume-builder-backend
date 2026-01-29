@@ -13,6 +13,32 @@ interface Education {
     year: string;
 }
 
+interface SocialLinks {
+    linkedin?: string;
+    github?: string;
+    portfolio?: string;
+    twitter?: string;
+}
+
+interface Project {
+    title: string;
+    description: string;
+    technologies: string[];
+    link?: string;
+}
+
+interface Certification {
+    name: string;
+    issuer: string;
+    date: string;
+    link?: string;
+}
+
+interface Language {
+    language: string;
+    proficiency: string; // e.g. Native, Fluent, Intermediate
+}
+
 export interface IResume extends Document {
     user: IUser['_id'];
     firstName: string;
@@ -20,8 +46,14 @@ export interface IResume extends Document {
     email: string;
     phone: string;
     address: string;
+    summary?: string;
+    socialLinks?: SocialLinks;
     experience: Experience[];
     education: Education[];
+    skills: string[];
+    projects: Project[];
+    certifications: Certification[];
+    languages: Language[];
     createdAt: Date;
     updatedAt: Date;
 }
@@ -39,6 +71,14 @@ const resumeSchema: Schema = new Schema({
     email: { type: String },
     phone: { type: String },
     address: { type: String },
+    summary: { type: String },
+
+    socialLinks: {
+        linkedin: String,
+        github: String,
+        portfolio: String,
+        twitter: String
+    },
     
     experience: [{
         title: String,
@@ -50,6 +90,27 @@ const resumeSchema: Schema = new Schema({
         school: String,
         degree: String,
         year: String
+    }],
+
+    skills: [String],
+
+    projects: [{
+        title: String,
+        description: String,
+        technologies: [String],
+        link: String
+    }],
+
+    certifications: [{
+        name: String,
+        issuer: String,
+        date: String,
+        link: String
+    }],
+
+    languages: [{
+        language: String,
+        proficiency: String
     }]
 
 }, {
