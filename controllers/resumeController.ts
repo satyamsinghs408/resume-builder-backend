@@ -16,7 +16,28 @@ export const parseResume = async (req: Request & { file?: Express.Multer.File },
 
     const dataBuffer = fs.readFileSync(req.file.path);
     const pdfParse = require('pdf-parse');
-    const data = await pdfParse(dataBuffer);
+
+    // Custom render function to extract hidden hyperlinks from the PDF
+    const render_page = async function(pageData: any) {
+        let textContent = await pageData.getTextContent();
+        let annotations = await pageData.getAnnotations();
+        
+        let text = textContent.items.map((item: any) => item.str).join(' ');
+        
+        // Grab hidden links and append them to the text so AI can see them
+        let links = annotations
+            .filter((a: any) => a.subtype === 'Link' && a.url)
+            .map((a: any) => a.url)
+            .join(', ');
+            
+        if (links) {
+            text += '\n[Embedded Links Found on this Page: ' + links + ']\n';
+        }
+        
+        return text;
+    };
+
+    const data = await pdfParse(dataBuffer, { pagerender: render_page });
     const text = data.text;
 
     // Use AI Service to parse the text
