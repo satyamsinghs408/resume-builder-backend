@@ -22,7 +22,11 @@ const corsOptions = {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
     
-    if (allowedOrigins.includes(origin) || allowedOrigins.includes(origin.replace(/\/$/, ""))) {
+    // Check if origin is a local network IP (10.x, 192.168.x, or 172.16-31.x)
+    const isLocalNetwork = origin.match(/^http:\/\/(10\.|192\.168\.|172\.(1[6-9]|2[0-9]|3[0-1])\.)/);
+    const isLocalhost = origin.includes('localhost') || origin.includes('127.0.0.1');
+
+    if (isLocalhost || isLocalNetwork || allowedOrigins.includes(origin) || allowedOrigins.includes(origin.replace(/\/$/, ""))) {
       callback(null, true);
     } else {
       console.log('Blocked by CORS:', origin);
