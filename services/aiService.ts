@@ -7,7 +7,7 @@ const model = genAI.getGenerativeModel({ model: "gemini-2.5-flash" });
 
 export const parseResumeWithAI = async (text: string) => {
   const prompt = `
-    You are an expert resume parser associated with a Resume Builder Application.
+    You are an expert resume parser associated with a CareerLeaf Application.
     Extract the following details from the resume text provided below and return STRICT JSON ONLY.
     
     Do not add any markdown formatting like \`\`\`json or \`\`\`. Just return the raw JSON string.
