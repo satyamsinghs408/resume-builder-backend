@@ -4,6 +4,8 @@ import dotenv from 'dotenv';
 import connectDB from './config/db';
 import userRoutes from './routes/userRoutes';
 import resumeRoutes from './routes/resumeRoutes';
+import contactRoutes from './routes/contactRoutes';
+import feedbackRoutes from './routes/feedbackRoutes';
 
 dotenv.config();
 
@@ -42,6 +44,8 @@ app.use(express.json());
 
 app.use('/api/users', userRoutes);
 app.use('/api/resumes', resumeRoutes);
+app.use('/api/contact', contactRoutes);
+app.use('/api/feedback', feedbackRoutes);
 
 const PORT = process.env.PORT || 5000;
 

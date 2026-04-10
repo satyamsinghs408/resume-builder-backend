@@ -94,6 +94,40 @@ const createResume = async (req: AuthRequest, res: Response) => {
         });
 
         const savedResume = await newResume.save();
+
+        // Send confirmation email
+        try {
+            const sendEmail = (await import('../utils/sendEmail')).default;
+            const { wrapPremiumTemplate } = await import('../utils/emailTemplates');
+            
+            await sendEmail({
+                email: savedResume.email || req.user.email,
+                subject: 'Your CareerLeaf Resume is Ready!',
+                message: `Hi ${savedResume.firstName},\n\nYour professional resume has been successfully created on CareerLeaf. You can view and edit it anytime from your dashboard.`,
+                html: wrapPremiumTemplate({
+                    tagline: 'Document Saved',
+                    title: 'Your Professional Resume is Ready!',
+                    content: `
+                        <p>Hi <strong>${savedResume.firstName}</strong>,</p>
+                        <p>Great news! Your professional resume was successfully created and optimized for your next career move.</p>
+                        <div style="background: #f9fafb; padding: 20px; border-radius: 16px; margin: 24px 0; border: 1px solid #e2e8f0;">
+                            <p style="margin: 0; font-weight: bold; color: #0f172a; font-size: 14px; text-transform: uppercase; letter-spacing: 0.05em;">Draft Details</p>
+                            <div style="margin-top: 12px; font-size: 15px;">
+                                <div style="display: flex; margin-bottom: 4px;"><span style="color: #64748b; width: 100px;">Name:</span> <span style="color: #0f172a;">${savedResume.firstName} ${savedResume.lastName}</span></div>
+                                <div style="display: flex;"><span style="color: #64748b; width: 100px;">Created:</span> <span style="color: #0f172a;">${new Date().toLocaleDateString()}</span></div>
+                            </div>
+                        </div>
+                        <p>You can now download your resume in multiple formats or continue editing your professional profile from your dashboard.</p>
+                    `,
+                    buttonText: 'Access My Dashboard',
+                    buttonUrl: `${process.env.FRONTEND_URL}/dashboard`,
+                    footerText: 'Your professional growth is our mission. Access your documents at any time at CareerLeaf.app'
+                })
+            });
+        } catch (err) {
+            console.error('Resume creation email failed:', err);
+        }
+
         res.status(201).json(savedResume);
     } catch (error: any) {
         res.status(400).json({ message: error.message });

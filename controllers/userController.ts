@@ -34,6 +34,31 @@ const registerUser = async (req: Request, res: Response) => {
         });
 
         if (user) {
+            // Optional: Send Welcome Email
+            try {
+                const sendEmail = (await import('../utils/sendEmail')).default;
+                const { wrapPremiumTemplate } = await import('../utils/emailTemplates');
+                
+                await sendEmail({
+                    email: user.email,
+                    subject: 'Welcome to CareerLeaf!',
+                    message: `Hi ${user.name},\n\nWelcome to CareerLeaf! We're excited to help you build your professional resume.`,
+                    html: wrapPremiumTemplate({
+                        tagline: 'Your Journey Starts Here',
+                        title: `Welcome to CareerLeaf, ${user.name}!`,
+                        content: `
+                            <p>We're thrilled to have you join our community of professionals. CareerLeaf is designed to help you stand out in the modern job market with world-class resume building tools.</p>
+                            <p>Whether you're starting from scratch or refining an existing career path, we're here to provide the architect's tools for your success.</p>
+                        `,
+                        buttonText: 'Start Building Your Resume',
+                        buttonUrl: `${process.env.FRONTEND_URL}/editor`,
+                        footerText: 'Thank you for choosing CareerLeaf to design your professional identity.'
+                    })
+                });
+            } catch (err) {
+                console.error('Welcome email failed to send:', err);
+            }
+
             res.status(201).json({
                 _id: user.id,
                 name: user.name,
