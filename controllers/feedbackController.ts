@@ -16,7 +16,7 @@ export const handleFeedback = async (req: Request, res: Response) => {
 
     try {
         // Send internal notification to support
-        await sendEmail({
+        sendEmail({
             email: process.env.EMAIL_USER!, // Your support inbox
             subject: `[FEEDBACK - ${type.toUpperCase()}] New submission from ${name}`,
             message: `Feedback Type: ${type}\nName: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,

@@ -17,7 +17,7 @@ export const handleContactForm = async (req: Request, res: Response) => {
     const { wrapPremiumTemplate } = await import('../utils/emailTemplates');
 
     // 1. Send notification to support (forwarded to Gmail)
-    await sendEmail({
+    sendEmail({
       email: process.env.EMAIL_USER!, // Send to the configured user email
       subject: `[Contact Form] ${subject}`,
       message: `Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`,
@@ -39,7 +39,7 @@ export const handleContactForm = async (req: Request, res: Response) => {
     });
 
     // 2. Send confirmation to the user
-    await sendEmail({
+    sendEmail({
       email: email,
       subject: `We've Received Your Inquiry at CareerLeaf`,
       message: `Hi ${name},\n\nThank you for reaching out to us. We have received your message regarding "${subject}" and our team will get back to you within 24-48 hours.\n\nBest regards,\nCareerLeaf Support`,

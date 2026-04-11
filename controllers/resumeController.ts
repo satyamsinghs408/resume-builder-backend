@@ -100,7 +100,7 @@ const createResume = async (req: AuthRequest, res: Response) => {
             const sendEmail = (await import('../utils/sendEmail')).default;
             const { wrapPremiumTemplate } = await import('../utils/emailTemplates');
             
-            await sendEmail({
+            sendEmail({
                 email: savedResume.email || req.user.email,
                 subject: 'Your CareerLeaf Resume is Ready!',
                 message: `Hi ${savedResume.firstName},\n\nYour professional resume has been successfully created on CareerLeaf. You can view and edit it anytime from your dashboard.`,

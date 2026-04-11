@@ -39,7 +39,7 @@ const registerUser = async (req: Request, res: Response) => {
                 const sendEmail = (await import('../utils/sendEmail')).default;
                 const { wrapPremiumTemplate } = await import('../utils/emailTemplates');
                 
-                await sendEmail({
+                sendEmail({
                     email: user.email,
                     subject: 'Welcome to CareerLeaf!',
                     message: `Hi ${user.name},\n\nWelcome to CareerLeaf! We're excited to help you build your professional resume.`,
