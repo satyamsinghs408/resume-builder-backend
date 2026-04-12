@@ -33,7 +33,7 @@ const sendEmail = async (options: EmailOptions) => {
 
   try {
     const { data, error } = await resend.emails.send({
-      from: process.env.EMAIL_FROM || 'Careerleaf Support <support@careerleaf.app>',
+      from: process.env.EMAIL_FROM?.replace(/^["']|["']$/g, '') || 'Careerleaf Support <support@careerleaf.app>',
       to: options.email,
       subject: options.subject,
       text: options.message,
