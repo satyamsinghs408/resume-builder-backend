@@ -2,6 +2,10 @@ import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { Request, Response } from 'express';
 import User from '../models/User';
+import Resume from '../models/Resume';
+import { AuthRequest } from '../types';
+import sendEmail from '../utils/sendEmail';
+import { passwordChangedTemplate, accountDeletedTemplate } from '../utils/emailTemplates';
 
 // Helper function to generate JWT Token
 const generateToken = (id: string): string => {
@@ -36,7 +40,6 @@ const registerUser = async (req: Request, res: Response) => {
         if (user) {
             // Optional: Send Welcome Email
             try {
-                const sendEmail = (await import('../utils/sendEmail')).default;
                 const { wrapPremiumTemplate } = await import('../utils/emailTemplates');
                 
                 sendEmail({
@@ -96,4 +99,91 @@ const loginUser = async (req: Request, res: Response) => {
     }
 };
 
-export { registerUser, loginUser };
+// @desc    Get user profile
+// @route   GET /api/users/profile
+// @access  Private
+const getUserProfile = async (req: AuthRequest, res: Response) => {
+    try {
+        if (!req.user) {
+            return res.status(401).json({ message: 'Not authorized' });
+        }
+        // req.user is already populated by protect middleware
+        res.json(req.user);
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Change user password
+// @route   PUT /api/users/profile/password
+// @access  Private
+const changePassword = async (req: AuthRequest, res: Response) => {
+    const { currentPassword, newPassword } = req.body;
+
+    try {
+        if (!req.user) {
+            return res.status(401).json({ message: 'Not authorized' });
+        }
+
+        const user = await User.findById(req.user._id);
+
+        if (user && user.password && (await bcrypt.compare(currentPassword, user.password))) {
+            const salt = await bcrypt.genSalt(10);
+            user.password = await bcrypt.hash(newPassword, salt);
+            await user.save();
+
+            // Send confirmation email
+            sendEmail({
+                email: user.email,
+                subject: 'Security Alert: Password Changed',
+                message: `Hi ${user.name}, your account password was successfully updated.`,
+                html: passwordChangedTemplate(user.name)
+            });
+
+            res.json({ message: 'Password updated successfully' });
+        } else {
+            res.status(401).json({ message: 'Invalid current password' });
+        }
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+// @desc    Delete user account
+// @route   DELETE /api/users/profile
+// @access  Private
+const deleteAccount = async (req: AuthRequest, res: Response) => {
+    const { password } = req.body;
+
+    try {
+        if (!req.user) {
+            return res.status(401).json({ message: 'Not authorized' });
+        }
+
+        const user = await User.findById(req.user._id);
+
+        if (user && user.password && (await bcrypt.compare(password, user.password))) {
+            // 1. Delete all resumes associated with this user
+            await Resume.deleteMany({ user: user._id });
+
+            // 2. Delete the user
+            await user.deleteOne();
+
+            // 3. Send goodbye email
+            sendEmail({
+                email: user.email,
+                subject: 'Account Permanently Deleted',
+                message: `Hi ${user.name}, your account has been removed. We're sorry to see you go!`,
+                html: accountDeletedTemplate(user.name)
+            });
+
+            res.json({ message: 'Account and all data deleted successfully' });
+        } else {
+            res.status(401).json({ message: 'Invalid password. Deletion aborted.' });
+        }
+    } catch (error: any) {
+        res.status(500).json({ message: error.message });
+    }
+};
+
+export { registerUser, loginUser, getUserProfile, changePassword, deleteAccount };

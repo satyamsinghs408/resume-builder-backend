@@ -113,3 +113,41 @@ export const feedbackSupportTemplate = (data: { name: string; email: string; typ
         footerText: 'This is an internal notification from the CareerLeaf.app feedback engine.'
     });
 };
+/**
+ * Password Change Confirmation
+ */
+export const passwordChangedTemplate = (name: string) => {
+    return wrapPremiumTemplate({
+        tagline: 'Security Update',
+        title: 'Password Changed Successfully',
+        content: `
+            <p>Hi <strong>${name}</strong>,</p>
+            <p>This email confirms that the password for your CareerLeaf account was successfully changed.</p>
+            <p>If you did not make this change, please contact our support team immediately to secure your account.</p>
+            <div style="background-color: #fff7ed; border-radius: 12px; padding: 16px; border: 1px solid #ffedd5; margin-top: 24px;">
+                <p style="margin: 0; font-size: 14px; color: #9a3412;">
+                    <strong>Security Tip:</strong> Use a unique password and avoid using the same password for multiple services.
+                </p>
+            </div>
+        `,
+        buttonText: 'Secure My Account',
+        buttonUrl: 'https://careerleaf.app/contact',
+        footerText: 'This is an automated security notification.'
+    });
+};
+
+/**
+ * Account Deletion Confirmation
+ */
+export const accountDeletedTemplate = (name: string) => {
+    return wrapPremiumTemplate({
+        tagline: 'Account Closed',
+        title: 'Your Account Has Been Deleted',
+        content: `
+            <p>Hi <strong>${name}</strong>,</p>
+            <p>As you requested, your CareerLeaf account and all associated data, including your resumes, have been permanently deleted from our system.</p>
+            <p>We're sorry to see you go, but we hope CareerLeaf helped you on your professional journey. If you ever need our tools again, you're always welcome to create a new account.</p>
+        `,
+        footerText: 'Thank you for being part of CareerLeaf. We wish you the best of luck in your career.'
+    });
+};
