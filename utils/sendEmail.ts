@@ -1,7 +1,17 @@
-import nodemailer from 'nodemailer';
+import { Resend } from 'resend';
 import dotenv from 'dotenv';
 
 dotenv.config();
+
+// Initialize Resend lazily or handle missing key to avoid crashing at startup
+let resend: Resend | null = null;
+try {
+  if (process.env.RESEND_API_KEY) {
+    resend = new Resend(process.env.RESEND_API_KEY);
+  }
+} catch (err) {
+  console.error('[Resend Init Error]: Failed to initialize Resend. Check your API key.');
+}
 
 interface EmailOptions {
   email: string;
@@ -10,32 +20,34 @@ interface EmailOptions {
   html?: string;
 }
 
+/**
+ * Sends an email using the Resend API.
+ * This is an async function but should be called without 'await' in controllers
+ * to maintain non-blocking behavior.
+ */
 const sendEmail = async (options: EmailOptions) => {
-  // Create a transporter
-  const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-      user: process.env.EMAIL_USER,
-      pass: process.env.EMAIL_PASS,
-    },
-  });
+  if (!resend) {
+    console.error('[Email Error]: Resend is not initialized. Please set RESEND_API_KEY in your .env file.');
+    return;
+  }
 
-  // Define email options
-  const mailOptions = {
-    from: process.env.EMAIL_FROM,
-    to: options.email,
-    subject: options.subject,
-    text: options.message,
-    html: options.html,
-  };
-
-  // Send the email
   try {
-    await transporter.sendMail(mailOptions);
-    console.log(`Email sent successfully to ${options.email}`);
+    const { data, error } = await resend.emails.send({
+      from: process.env.EMAIL_FROM || 'Careerleaf Support <support@careerleaf.app>',
+      to: options.email,
+      subject: options.subject,
+      text: options.message,
+      html: options.html,
+    });
+
+    if (error) {
+      console.error('[Resend Error]:', error);
+      return;
+    }
+
+    console.log(`[Email Success] ID: ${data?.id} | To: ${options.email}`);
   } catch (error) {
-    console.error('Error sending email:', error);
-    throw new Error('Email could not be sent');
+    console.error('[Email Internal Error]:', error);
   }
 };
 
