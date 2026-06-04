@@ -5,12 +5,18 @@ interface Experience {
     title: string;
     company: string;
     description: string;
+    startDate?: string;
+    endDate?: string;
+    current?: boolean;
 }
 
 interface Education {
     school: string;
     degree: string;
-    year: string;
+    year?: string;
+    startDate?: string;
+    endDate?: string;
+    current?: boolean;
 }
 
 interface SocialLinks {
@@ -83,13 +89,19 @@ const resumeSchema: Schema = new Schema({
     experience: [{
         title: String,
         company: String,
-        description: String
+        description: String,
+        startDate: String,
+        endDate: String,
+        current: Boolean
     }],
 
     education: [{
         school: String,
         degree: String,
-        year: String
+        year: String,
+        startDate: String,
+        endDate: String,
+        current: Boolean
     }],
 
     skills: [String],
